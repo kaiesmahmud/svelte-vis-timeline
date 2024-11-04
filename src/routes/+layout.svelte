@@ -6,7 +6,8 @@
     <p class="text-xl">svelte-vis-timeline</p>
     <div class="flex flex-wrap items-center justify-center gap-3">
       <a href="./drag-and-drop">1. Timeline Drag & Drop Example</a>
-      <a href="./update-data-on-event">2. Timeline update data on event Example</a>
+      <a href="./our_drag-and-drop">Our timeline</a>
+      <a href="./update-data-on-event">3. Timeline update data on event Example</a>
     </div>
 </div>
 </div>
