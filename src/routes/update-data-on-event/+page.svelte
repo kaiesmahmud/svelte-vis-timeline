@@ -20,6 +20,17 @@
     // Specify options
     const options = {
         showCurrentTime: true,
+        moveable: true,
+        zoomable: true,
+        horizontalScroll: true,
+        margin: {
+            item: 10, // adds space around items
+            axis: 5   // adds space around the timeline axis
+        },
+        stack: false, // if items overlap, try disabling stacking
+        orientation: { axis: "top", item: "top" },
+        multiselect: true,
+        editable: { updateTime: true, updateGroup: true }
     };
 
     onMount(() => {
