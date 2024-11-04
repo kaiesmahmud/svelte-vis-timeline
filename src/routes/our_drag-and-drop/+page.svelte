@@ -39,16 +39,17 @@
 			});
 		}
 	}
-	let todayStart= new Date().setHours(0, 0, 0, 0);
-	let todayEnd = new Date().setHours(0, 4, 0, 0);
+	let todayStart = new Date().setHours(0, 0, 0, 0);
+	let todayEnd = new Date().setHours(0, 0, 30, 0);
+
 	const options = {
 		stack: true,
 		start: todayStart, // Start at midnight today
-        end: todayEnd, // End at the last minute of today
+		end: todayEnd, // End at the last minute of today
 		min: todayStart,
-        max: todayEnd,
-        zoomMin: 1000 * 60 * 1, // Minimum zoom to 1 hour
-        zoomMax: 1000 * 60 * 60 * 60, // Maximum zoom to 12 hours
+		max: new Date().setHours(20, 0, 0, 0),
+		zoomMin: 1000 * 60 * 1, // Minimum zoom to 1 hour
+		zoomMax: 1000 * 60 * 60 * 60, // Maximum zoom to 12 hours
 		editable: true,
 		orientation: "top",
 		onDropObjectOnItem: (objectData, item, callback) => {
@@ -58,23 +59,62 @@
 			);
 		},
 		moveable: true,
-        zoomable: true,
-        horizontalScroll: true,
-        // stack: false, // if items overlap, try disabling stacking
-        orientation: { axis: "top", item: "top" },
-        multiselect: true,
+		zoomable: true,
+		horizontalScroll: true,
+		// stack: false, // if items overlap, try disabling stacking
+		orientation: { axis: "top", item: "top" },
+		multiselect: true,
 		// Customize the time axis to show only hours
-        format: {
-            minorLabels: {
-                hour: 'h:mm a', // Display hours with minutes in 12-hour format (e.g., 1:00 PM)
-            },
-            majorLabels: {
-                day: 'h' // Show the day if zoomed out far enough
-            }
-        }
-        // editable: { updateTime: true, updateGroup: true }
+		format: {
+			minorLabels: minorLabels,
+			majorLabels: majorLabels,
+		},
+		// editable: { updateTime: true, updateGroup: true }
 	};
-
+	function minorLabels(date, scale, step) {
+		switch (scale) {
+			case "millisecond":
+				return date.format("HH:mm:ss");
+			case "second":
+				return date.format("HH:mm:ss");
+			case "minute":
+				return date.format("HH:mm");
+			case "hour":
+				return date.format("HH:mm");
+			case "weekday":
+				return date.format("ddd D MMMM");
+			case "day":
+				return date.format("ddd D MMMM");
+			case "week":
+				return date.format("ddd D MMMM");
+			case "month":
+				return date.format("MMMM YYYY");
+			case "year":
+				return date.format("YYYY");
+		}
+	}
+	function majorLabels(date, scale, step) {
+		switch (scale) {
+			case "millisecond":
+				return date.format("HH:mm:ss");
+			case "second":
+				return date.format("HH:mm:ss");
+			case "minute":
+				return date.format("HH:mm");
+			case "hour":
+				return date.format("HH:mm");
+			case "weekday":
+				return date.format("ddd D MMMM");
+			case "day":
+				return date.format("ddd D MMMM");
+			case "week":
+				return date.format("ddd D MMMM");
+			case "month":
+				return date.format("MMMM YYYY");
+			case "year":
+				return date.format("YYYY");
+		}
+	}
 	const handleDragStart = (event) => {
 		event.dataTransfer.effectAllowed = "move";
 		const itemType = event.target.innerHTML.split("-")[1].trim();
@@ -129,7 +169,7 @@
 		};
 	});
 </script>
- 
+
 <main>
 	<h1>Timeline Drag & Drop Example</h1>
 
