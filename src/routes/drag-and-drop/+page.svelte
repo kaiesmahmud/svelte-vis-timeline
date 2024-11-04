@@ -52,6 +52,13 @@
 				`dropped object with content: "${objectData.content}" to item: "${item.content}"`,
 			);
 		},
+		moveable: true,
+        zoomable: true,
+        horizontalScroll: true,
+        // stack: false, // if items overlap, try disabling stacking
+        orientation: { axis: "top", item: "top" },
+        multiselect: true,
+        // editable: { updateTime: true, updateGroup: true }
 	};
 
 	const handleDragStart = (event) => {
@@ -127,7 +134,7 @@
 		<div class="side">
 			<h3>Items:</h3>
 			<ul class="items">
-				<li draggable="true" class="item">item 1 - box</li>
+				<li draggable="true" class="item">item 1 - range</li>
 				<li draggable="true" class="item">item 2 - point</li>
 				<li draggable="true" class="item">item 3 - range</li>
 				<li draggable="true" class="item">
