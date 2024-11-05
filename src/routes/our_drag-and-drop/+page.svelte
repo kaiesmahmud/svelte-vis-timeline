@@ -7,40 +7,11 @@
 	let timeline1;
 	let container;
 
-	// Create groups
-	const numberOfGroups = 3;
 	const groups = new DataSet();
-	for (let i = 0; i < numberOfGroups; i++) {
-		groups.add({
-			id: i,
-			content: `Group ${i}`,
-		});
-	}
-
-	// Create items
-	const numberOfItems = 10;
 	const items = new DataSet();
-	const itemsPerGroup = Math.round(numberOfItems / numberOfGroups);
 
-	for (let truck = 0; truck < numberOfGroups; truck++) {
-		let date = new Date();
-		for (let order = 0; order < itemsPerGroup; order++) {
-			date.setHours(0);
-			const start = new Date(date);
-			date.setHours(4);
-			const end = new Date(date);
-
-			items.add({
-				id: order + itemsPerGroup * truck,
-				group: truck,
-				start: start,
-				end: end,
-				content: `Order ${order}`,
-			});
-		}
-	}
 	let todayStart = new Date().setHours(0, 0, 0, 0);
-	let todayEnd = new Date().setHours(0, 0, 30, 0);
+	let todayEnd = new Date().setHours(4, 0, 0, 0);
 
 	const options = {
 		stack: true,
@@ -64,13 +35,33 @@
 		// stack: false, // if items overlap, try disabling stacking
 		orientation: { axis: "top", item: "top" },
 		multiselect: true,
+		onMoving: (item, callback) => {
+			console.log("onMoving", item);
+			if(item.dataType==groups.get(item.group).dataType){
+				// Adding a backup of the group reference
+				item.lastGroup=item.group;
+			}
+			else{
+				item.group=item.lastGroup;
+			}
+			callback(item);
+		},
 		// Customize the time axis to show only hours
 		format: {
 			minorLabels: minorLabels,
 			majorLabels: majorLabels,
 		},
+		onAdd: (item, callback) => {
+			if(item.dataType==groups.get(item.group).dataType){
+				// Adding a backup of the group reference
+				item.lastGroup=item.group;
+				callback(item);
+			}
+			
+		}
 		// editable: { updateTime: true, updateGroup: true }
 	};
+
 	function minorLabels(date, scale, step) {
 		switch (scale) {
 			case "millisecond":
@@ -115,25 +106,18 @@
 				return date.format("YYYY");
 		}
 	}
+
 	const handleDragStart = (event) => {
 		event.dataTransfer.effectAllowed = "move";
-		const itemType = event.target.innerHTML.split("-")[1].trim();
 		const item = {
 			id: new Date(),
-			type: itemType,
-			content: event.target.innerHTML.split("-")[0].trim(),
+			type: "range",
+			content: event.target.innerHTML,
+			dataType:event.target.title
 		};
-
-		const isFixedTimes =
-			event.target.innerHTML.split("-")[2] &&
-			event.target.innerHTML.split("-")[2].trim() === "fixed times";
-
-		if (isFixedTimes) {
-			item.start = new Date();
-			item.end = new Date(1000 * 60 * 10 + new Date().valueOf());
-		}
-
+		
 		event.dataTransfer.setData("text", JSON.stringify(item));
+		console.log(event.target.title)
 	};
 
 	const handleObjectItemDragStart = (event) => {
@@ -148,7 +132,6 @@
 	onMount(() => {
 		// Initialize timeline
 		timeline1 = new Timeline(container, items, groups, options);
-
 		// Add drag event listeners
 		const itemElements = document.querySelectorAll(".items .item");
 		const objectItems = document.querySelectorAll(".object-item");
@@ -168,19 +151,38 @@
 			}
 		};
 	});
+	// Functions to add tracks
+	function addAudioTrack() {
+		// Add audio track logic
+		groups.add({
+			id: `${groups.length}`,
+			content: `Audio Track ${groups.length}`,
+			dataType: "audio"
+		})
+	}
+	function addImageTrack() {
+		// Add image track logic
+		groups.add({
+			id: `${groups.length}`,
+			content: `Image Track ${groups.length}`,
+			dataType: "image"
+		})
+	}
+	function addTextTrack() {
+		// Add text track logic
+		groups.add({
+			id: `${groups.length}`,
+			content: `Text Track ${groups.length}`,
+			dataType: "text"
+		})
+	}
 </script>
 
 <main>
 	<h1>Timeline Drag & Drop Example</h1>
-
-	<p>
-		For this to work, you will have to define your own
-		<code>'dragstart'</code> eventListener on each item in your list of
-		items (make sure that any new item added to the list is attached to this
-		eventListener 'dragstart' handler). This 'dragstart' handler must set
-		<code>dataTransfer</code> - notice you can set the item's information as
-		you want this way.
-	</p>
+	<button on:click={addAudioTrack}>Add Audio Track</button>
+	<button on:click={addImageTrack}>Add Image Track</button>
+	<button on:click={addTextTrack}>Add Text Track</button>
 
 	<div bind:this={container} id="visualization"></div>
 
@@ -188,13 +190,9 @@
 		<div class="side">
 			<h3>Items:</h3>
 			<ul class="items">
-				<li draggable="true" class="item">item 1 - range</li>
-				<li draggable="true" class="item">item 2 - point</li>
-				<li draggable="true" class="item">item 3 - range</li>
-				<li draggable="true" class="item">
-					item 3 - range - fixed times - <br />
-					(start: now, end: now + 10 min)
-				</li>
+				<li draggable="true" class="item" title="audio">Audio Item</li>
+				<li draggable="true" class="item" title="image">Image Item</li>
+				<li draggable="true" class="item" title="text">Text Item</li>
 			</ul>
 		</div>
 
