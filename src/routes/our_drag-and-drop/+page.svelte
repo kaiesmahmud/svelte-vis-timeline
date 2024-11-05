@@ -32,8 +32,9 @@
 		moveable: true,
 		zoomable: true,
 		horizontalScroll: true,
+		zoomKey: "ctrlKey", 
 		// stack: false, // if items overlap, try disabling stacking
-		orientation: { axis: "top", item: "top" },
+		// orientation: { axis: "top", item: "top" },
 		multiselect: true,
 		onMoving: (item, callback) => {
 			console.log("onMoving", item);
