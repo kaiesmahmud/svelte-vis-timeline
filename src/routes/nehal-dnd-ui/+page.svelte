@@ -12,7 +12,7 @@
 	const groups = new DataSet();
 	for (let i = 0; i < numberOfGroups; i++) {
 		groups.add({
-			id: i,
+			id: "group"+i,
 			content: `Group ${i}`,
 		});
 	}
@@ -32,16 +32,16 @@
 
 			items.add({
 				id: order + itemsPerGroup * truck,
-				className:'bg-slate-800',
-				group: truck,
+				className:" custom-class",
+				group: "group1",
 				start: new Date().setHours(0, 0, 0, 0),
-				end: end,
-				content: `already added ${order}`,
+				end: new Date().setHours(0, 2, 2, 0),
+				content: `<div class="${order + truck + 1 }"> already added ${order}</div>`,
 			});
 		}
 	}
 	let todayStart = new Date().setHours(0, 0, 0, 0);
-	let todayEnd = new Date().setHours(0, 0, 30, 0);
+	let todayEnd = new Date().setHours(0, 30, 0, 0);
 
 	const options = {
 		stack: true,
@@ -54,22 +54,23 @@
 		editable: true,
 		orientation: "top",
 		onDropObjectOnItem: (objectData, item, callback) => {
+			console.log('drop item ',item)
+			console.log('drop object ',objectData)
 			if (!item) return;
 			alert(
 				`dropped object with content: "${objectData.content}" to item: "${item.content}"`,
 			);
 		},
 		moveable: true,
-		zoomable: true,
 		horizontalScroll: true,
-		// stack: false, // if items overlap, try disabling stacking
-		orientation: { axis: "top", item: "top" },
+		zoomable: true,
+		zoomKey: "ctrlKey", 
 		multiselect: true,
 		// Customize the time axis to show only hours
-		format: {
-			minorLabels: minorLabels,
-			majorLabels: majorLabels,
-		},
+		// format: {
+		// 	minorLabels: minorLabels,
+		// 	majorLabels: majorLabels,
+		// },
 		// editable: { updateTime: true, updateGroup: true }
 	};
 	function minorLabels(date, scale, step) {
@@ -208,7 +209,6 @@
 </main>
 
 <style>
-	/* Add your CSS styles here */
 	.items-panel {
 		display: flex;
 		gap: 2rem;
@@ -228,7 +228,7 @@
 		cursor: move;
 		margin-bottom: 0.5rem;
 		padding: 0.5rem;
-		background: #f5f5f5;
+		background: red; /* Override background color */
 		border: 1px solid #ddd;
 		border-radius: 4px;
 	}
@@ -237,7 +237,7 @@
 		list-style: none;
 		width: 150px;
 		color: #1a1a1a;
-		background-color: #d5ddf6;
+		background-color: red; /* Override background color */
 		border: 1px solid #97b0f8;
 		border-radius: 2px;
 		margin-bottom: 5px;
@@ -254,7 +254,7 @@
 		list-style: none;
 		width: 150px;
 		color: #1a1a1a;
-		background-color: #d5ddf6;
+		background-color: red; /* Override background color */
 		border: 1px solid #97b0f8;
 		border-radius: 2px;
 		margin-bottom: 5px;
@@ -272,3 +272,4 @@
 		justify-content: space-around;
 	}
 </style>
+
